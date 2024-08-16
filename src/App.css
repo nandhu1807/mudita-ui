@@ -36,3 +36,25 @@
     transform: rotate(360deg);
   }
 }
+
+.app {
+  padding: 16px;
+}
+
+.modal-content {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 600px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table-container {
+  margin-top: 16px;
+}

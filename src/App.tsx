@@ -1,26 +1,49 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LoginContainer from './client/containers/Login/LoginContainer';
+import WhatsNew from './client/components/WhatsNew';
+import AuthenticatedLayout from './client/components/AuthenticatedLayout';
+import ProtectedRoute from './client/components/ProtectedRoute';
+import CompetitionGradingContainer from './client/containers/CompetitionGradingContainer';
+import OngoingCompetitionContainer from './client/containers/OngoingCompetitionContainer';
+import UpcomingCompetitionContainer from './client/containers/UpcomingCompetitionContainer';
+import PastCompetitionContainer from './client/containers/PastCompetitionContainer';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<LoginContainer />} />
+
+        {/* Protected Routes */}
+        <Route element={<AuthenticatedLayout />}>
+          <Route path="/whats-new" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
+          <Route path="/student-profile" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
+          <Route path="/discussion" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
+          <Route
+            path="/competition"
+            element={<ProtectedRoute element={<CompetitionGradingContainer />} redirectTo="/" />}
+          />
+          <Route
+            path="/active-competition"
+            element={<ProtectedRoute element={<OngoingCompetitionContainer />} redirectTo="/" />}
+          />
+          <Route
+            path="/upcoming-competition"
+            element={<ProtectedRoute element={<UpcomingCompetitionContainer />} redirectTo="/" />}
+          />
+          <Route
+            path="/past-competition"
+            element={<ProtectedRoute element={<PastCompetitionContainer />} redirectTo="/" />}
+          />
+          <Route path="/learning" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
+          <Route path="/announcements" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
+          <Route path="/repository" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
+        </Route>
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

@@ -1,0 +1,19 @@
+.authenticated-layout {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    height: 100%;
+    border-right: 1px solid #ddd;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
