@@ -12,7 +12,9 @@ import {
   Card,
   CardMedia,
   CardContent,
+  IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { RootState } from '../utils/shared/store';
 import moment from 'moment';
 import actionTypes from '../utils/actionTypes';
@@ -23,9 +25,7 @@ interface CompetitionDetails {
   title: string;
   startDate: string;
   endDate: string;
-  course?: {
-    courseId: string;
-  };
+  courseList?: any;
   descriptionText: string;
   image?: string;
   videoFiles?: string;
@@ -101,7 +101,16 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>{competition.title}</DialogTitle>
+      <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold' }}>{competition.title}</DialogTitle>
+      <IconButton
+        edge="end"
+        color="inherit"
+        onClick={onClose}
+        aria-label="close"
+        sx={{ position: 'absolute', right: 24, top: 8 }}
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogContent>
         <Box sx={{ mb: 3 }}>
           <Card sx={{ display: 'flex', flexDirection: 'column', borderRadius: 2, boxShadow: 3 }}>
@@ -122,14 +131,14 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
                 <span>Start Date: {moment(competition.startDate).format('MM/DD/YYYY')}</span>
                 <span>End Date: {moment(competition.endDate).format('MM/DD/YYYY')}</span>
               </Typography>
-              {competition.course && (
+              {competition.courseList && (
                 <Typography
                   variant="subtitle1"
                   color="textSecondary"
                   sx={{ display: 'flex', justifyContent: 'space-between' }}
                   mt={2}
                 >
-                  <span>Course Id: {competition.course.courseId}</span>
+                  <span>Course Id: {competition.courseList}</span>
                 </Typography>
               )}
               <Typography
@@ -158,7 +167,7 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
                   rel="noopener noreferrer"
                   sx={{ color: '#1a0dab', cursor: 'pointer', textAlign: 'center', display: 'inline-block' }}
                 >
-                  Click to View Detailed Description
+                  Click to View Instructions
                 </Typography>
               </Box>
             </CardContent>
@@ -166,12 +175,12 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
         </Box>
         <TextField
           fullWidth
-          label="Google Drive Link"
+          label="Enter your submission link"
           variant="outlined"
           value={link}
           onChange={handleLinkChange}
           sx={{ mb: 2 }}
-          disabled={competition.isUserEnrolled}
+          autoComplete={'off'}
         />
         <TextField
           fullWidth
@@ -182,7 +191,6 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
           multiline
           rows={4}
           sx={{ mb: 2 }}
-          disabled={competition.isUserEnrolled}
         />
       </DialogContent>
       <DialogActions>
@@ -198,15 +206,11 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
             backgroundColor: 'background.paper',
           }}
         >
-          <Button onClick={onClose} color="primary" sx={{ mr: 2, width: '200px' }}>
-            Cancel
-          </Button>
           <Button
             variant="contained"
             color="primary"
             onClick={handleSubmit}
             sx={{ width: '200px' }}
-            disabled={competition.isUserEnrolled}
           >
             Submit
           </Button>

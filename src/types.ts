@@ -11,6 +11,7 @@ export interface Competition {
   title: string;
   startDate: string;
   endDate: string;
+  shortDescription: string;
   descriptionText: string;
   videoFiles?: string;
   image?: string;

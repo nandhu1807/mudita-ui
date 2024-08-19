@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../utils/shared/store';
-import { Box, Button, Divider, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import { Competition } from '../reducers/competition';
-import AddIcon from '@mui/icons-material/Add';
-import CreateCompetition from '../components/CreateCompetition';
 import CompetitionGradingCard from '../components/CompetitionGradingCard';
 import CompetitionGradingDialog from '../components/CompetitionGradingDialog';
 import actionTypes from '../utils/actionTypes';
@@ -36,7 +34,6 @@ const CompetitionGradingContainer: React.FC = () => {
   const dispatch = useDispatch();
   const [selectedCompetition, setSelectedCompetition] = useState<Competition | null>(null);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [openCreateCompetitionDialog, setOpenCreateCompetitionDialog] = useState<boolean>(false);
 
   const { closedCompetition }: ClosedCompetitionState = useSelector((state: RootState) => state.closedCompetition);
   const { studentCompetitionMasterDetails }: StudentCompetitionMasterDetailsState = useSelector(
@@ -60,22 +57,14 @@ const CompetitionGradingContainer: React.FC = () => {
     setOpenDialog(false);
   };
 
-  const handleCreateCompetitionOpenDialog = () => setOpenCreateCompetitionDialog(true);
-
-  const handleCreateCompetitionCloseDialog = () => setOpenCreateCompetitionDialog(false);
-
   return (
     <Box sx={{ padding: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           Competition Grading Screen
         </Typography>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={handleCreateCompetitionOpenDialog}>
-          Create Competition
-        </Button>
       </Box>
-      <Divider sx={{ mt: 3, mb: 4 }} />
-      <CreateCompetition open={openCreateCompetitionDialog} onClose={handleCreateCompetitionCloseDialog} />
+      <Divider sx={{ mt: 3, mb: 2 }} />
       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
         <CompetitionGradingCard competitions={closedCompetition} onClick={handleCompetitionClick} />
       </Box>

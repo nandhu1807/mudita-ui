@@ -18,9 +18,8 @@ const App: React.FC = () => {
 
         {/* Protected Routes */}
         <Route element={<AuthenticatedLayout />}>
-          <Route path="/whats-new" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
+          <Route path="/login-credentials" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
           <Route path="/student-profile" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
-          <Route path="/discussion" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
           <Route
             path="/competition"
             element={<ProtectedRoute element={<CompetitionGradingContainer />} redirectTo="/" />}
@@ -38,8 +37,6 @@ const App: React.FC = () => {
             element={<ProtectedRoute element={<PastCompetitionContainer />} redirectTo="/" />}
           />
           <Route path="/learning" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
-          <Route path="/announcements" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
-          <Route path="/repository" element={<ProtectedRoute element={<WhatsNew />} redirectTo="/" />} />
         </Route>
       </Routes>
     </Router>

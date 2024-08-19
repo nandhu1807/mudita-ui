@@ -13,7 +13,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ onSubmit, onEmailChange, onPasswordChange, email, password, error }) => {
   return (
-    <Container className={'login-container'} component="main" maxWidth="xl">
+    <Container className={'login-container'} component="main" maxWidth={false}>
       <Grid container direction="column" alignItems="center" justifyContent="center" style={{ minHeight: '100vh' }}>
         <Grid item style={{ width: '30%' }}>
           <Paper elevation={3} style={{ padding: 20, width: '100%' }}>

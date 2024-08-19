@@ -12,7 +12,9 @@ import {
   DialogTitle,
   DialogContent,
   Grid,
+  IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import actionTypes from '../utils/actionTypes';
@@ -26,14 +28,20 @@ const DatePickerField: React.FC<{
   label: string;
   selectedDate: Date | null;
   onChange: (date: Date | null) => void;
-}> = ({ label, selectedDate, onChange }) => (
+  minDate?: Date;
+  maxDate?: Date;
+}> = ({ label, selectedDate, onChange, minDate, maxDate }) => (
   <Box sx={{ mb: 2 }}>
-    <Typography variant="subtitle1">{label}</Typography>
+    <Typography variant="subtitle1" sx={{ mb: 1 }}>
+      {label}
+    </Typography>
     <DatePicker
       selected={selectedDate}
       onChange={onChange}
       dateFormat="MM/dd/yyyy"
       placeholderText={`Select ${label.toLowerCase()}`}
+      minDate={minDate}
+      maxDate={maxDate}
       wrapperClassName="datepicker-wrapper"
       className="datepicker-input"
     />
@@ -50,7 +58,7 @@ const CheckboxGroup: React.FC<{
         Courses Applicable To
       </Typography>
       <Grid container spacing={2}>
-        {['LM', 'CM', 'DM'].map((course) => (
+        {['Light Music', 'Carnatic Music', 'Devotional Music'].map((course) => (
           <Grid item key={course}>
             <FormControlLabel
               control={<Checkbox value={course} checked={selectedCourses.includes(course)} onChange={onChange} />}
@@ -79,21 +87,23 @@ const CreateCompetition: React.FC<CreateCompetitionProps> = ({ open, onClose }) 
       payload: {
         createCompetition: {
           title: name,
-          descriptionText: shortDescription,
           startDate,
           endDate,
           videoFiles: explanationFile,
-          course: {
-            courseId: 1,
-          },
+          shortDescription: shortDescription,
+          descriptionText: longDescription,
+          courseList: courses,
         },
       },
     });
     onClose();
   };
 
-  const handleCancel = () => {
-    onClose();
+  const handleStartDateChange = (date: Date | null) => {
+    setStartDate(date);
+    if (endDate && date && endDate < date) {
+      setEndDate(null);
+    }
   };
 
   const handleCourseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,14 +111,35 @@ const CreateCompetition: React.FC<CreateCompetitionProps> = ({ open, onClose }) 
     setCourses((prevCourses) => (checked ? [...prevCourses, value] : prevCourses.filter((course) => course !== value)));
   };
 
+  const isValid = () => {
+    return (
+      name && shortDescription && longDescription && explanationFile && startDate && endDate && endDate >= startDate && courses.length > 0
+    );
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', textTransform: 'uppercase' }}>Create New Competition</DialogTitle>
+      <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', textTransform: 'uppercase' }}>
+        Create New Competition
+      </DialogTitle>
+      <IconButton
+        edge="end"
+        color="inherit"
+        onClick={onClose}
+        aria-label="close"
+        sx={{ position: 'absolute', right: 24, top: 8 }}
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogContent>
         <Box component="form" noValidate autoComplete="off" sx={{ width: '100%', padding: 2 }}>
           <TextField
             fullWidth
-            label="Competition Name"
+            label={
+              <span>
+                Competition Name<span className="required-marker">*</span>
+              </span>
+            }
             variant="outlined"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -117,36 +148,62 @@ const CreateCompetition: React.FC<CreateCompetitionProps> = ({ open, onClose }) 
           />
           <TextField
             fullWidth
-            label="Competition Short Description"
+            label={
+              <span>
+                Competition Short Description<span className="required-marker">*</span>
+              </span>
+            }
             variant="outlined"
             value={shortDescription}
             onChange={(e) => setShortDescription(e.target.value)}
             sx={{ mb: 2 }}
+            InputLabelProps={{ sx: { fontSize: '1rem' } }}
           />
           <TextField
             fullWidth
-            label="Competition Long Description"
+            label={
+              <span>
+                Competition Long Description<span className="required-marker">*</span>
+              </span>
+            }
             variant="outlined"
             multiline
             rows={4}
             value={longDescription}
             onChange={(e) => setLongDescription(e.target.value)}
             sx={{ mb: 2 }}
+            InputLabelProps={{ sx: { fontSize: '1rem' } }}
           />
           <TextField
             fullWidth
-            label="Explanation File"
+            label={
+              <span>
+                Explanation File<span className="required-marker">*</span>
+              </span>
+            }
             variant="outlined"
             value={explanationFile}
             onChange={(e) => setExplanationFile(e.target.value)}
             sx={{ mb: 2 }}
+            InputLabelProps={{ sx: { fontSize: '1rem' } }}
+            required
           />
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <DatePickerField label="Start Date" selectedDate={startDate} onChange={setStartDate} />
+              <DatePickerField
+                label="Start Date"
+                selectedDate={startDate}
+                onChange={handleStartDateChange}
+                minDate={new Date()}
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <DatePickerField label="End Date" selectedDate={endDate} onChange={setEndDate} />
+              <DatePickerField
+                label="End Date"
+                selectedDate={endDate}
+                onChange={setEndDate}
+                minDate={startDate || new Date()}
+              />
             </Grid>
           </Grid>
           <CheckboxGroup selectedCourses={courses} onChange={handleCourseChange} />
@@ -160,10 +217,13 @@ const CreateCompetition: React.FC<CreateCompetitionProps> = ({ open, onClose }) 
               backgroundColor: 'background.paper',
             }}
           >
-            <Button variant="outlined" onClick={handleCancel} sx={{ mr: 2, width: '200px' }}>
-              Cancel
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleSave} sx={{ width: '200px' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSave}
+              sx={{ width: '200px' }}
+              disabled={!isValid()}
+            >
               Save
             </Button>
           </Box>

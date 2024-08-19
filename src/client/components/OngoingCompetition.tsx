@@ -82,7 +82,7 @@ const OngoingCompetition: React.FC<OngoingCompetitionListProps> = ({ competition
         )}
       </Box>
       <CreateCompetition open={openCreateCompetitionDialog} onClose={handleCreateCompetitionCloseDialog} />
-      <Competitions competitions={competitions} type="active" onCompetitionSelect={handleOpen} />
+      <Competitions competitions={competitions} role={role} type="active" onCompetitionSelect={handleOpen} />
       {role === 'STUDENT' && selectedCompetition && (
         <StudentSubmitDialog
           type="active"

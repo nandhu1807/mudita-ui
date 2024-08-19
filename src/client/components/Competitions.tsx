@@ -1,5 +1,4 @@
 import React from 'react';
-import EditIcon from '@mui/icons-material/Edit';
 import { Card, CardContent, CardMedia, Typography, Grid, Box, Divider, IconButton, Tooltip } from '@mui/material';
 import { Competition } from '../../types';
 import moment from 'moment';
@@ -8,14 +7,16 @@ import thumbnail from '../images/thumbnail-image.png';
 interface CompetitionsProps {
   competitions: Competition[];
   type: 'upcoming' | 'past' | 'active';
+  role: 'STUDENT' | 'ADMIN' | '';
   onCompetitionSelect: (competition: Competition) => void;
 }
 
 const CompetitionCard: React.FC<{
   competition: Competition;
   type: string;
+  role: 'STUDENT' | 'ADMIN' | '';
   onCompetitionSelect: (competition: Competition) => void;
-}> = ({ competition, type, onCompetitionSelect }) => {
+}> = ({ competition, type, role, onCompetitionSelect }) => {
   const handleClick = () => onCompetitionSelect(competition);
 
   return (
@@ -54,7 +55,7 @@ const CompetitionCard: React.FC<{
             <span>End Date: {moment(competition.endDate).format('MM/DD/YYYY')}</span>
           </Typography>
           <Typography variant="body2" color="textSecondary" mt={2} mb={2}>
-            {competition.descriptionText}
+            {competition.shortDescription}
           </Typography>
           {type !== 'past' && (
             <Box
@@ -65,7 +66,7 @@ const CompetitionCard: React.FC<{
                 justifyContent: 'center',
                 textAlign: 'center',
                 height: '100%',
-                mt: 3,
+                mt: 1,
               }}
             >
               <Typography
@@ -75,7 +76,7 @@ const CompetitionCard: React.FC<{
                 rel="noopener noreferrer"
                 sx={{ color: '#1a0dab', cursor: 'pointer', textAlign: 'center', display: 'inline-block' }}
               >
-                Click to View Detailed Description
+                Click to View Instructions
               </Typography>
             </Box>
           )}
@@ -87,7 +88,7 @@ const CompetitionCard: React.FC<{
               justifyContent: 'center',
               textAlign: 'center',
               height: '100%',
-              mt: 3,
+              mt: 1,
             }}
           >
             {type === 'past' && (
@@ -100,7 +101,9 @@ const CompetitionCard: React.FC<{
             {type === 'active' && (
               <Tooltip title="Edit Competition" arrow>
                 <IconButton onClick={handleClick}>
-                  <EditIcon />
+                  <Typography sx={{ color: '#1a0dab', textDecoration: 'underline' }}>
+                    {role === 'STUDENT' ? 'Click to Submit Entry' : 'View Submission Entries'}
+                  </Typography>
                 </IconButton>
               </Tooltip>
             )}
@@ -111,7 +114,7 @@ const CompetitionCard: React.FC<{
   );
 };
 
-const Competitions: React.FC<CompetitionsProps> = ({ competitions, type, onCompetitionSelect }) => {
+const Competitions: React.FC<CompetitionsProps> = ({ competitions, type, role, onCompetitionSelect }) => {
   return (
     <Box sx={{ padding: 3, paddingTop: 0 }}>
       <Divider sx={{ mb: 4 }} />
@@ -121,6 +124,7 @@ const Competitions: React.FC<CompetitionsProps> = ({ competitions, type, onCompe
             key={competition.competitionId}
             competition={competition}
             type={type}
+            role={role}
             onCompetitionSelect={onCompetitionSelect}
           />
         ))}

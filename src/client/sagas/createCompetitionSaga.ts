@@ -36,6 +36,18 @@ export default function* createCompetitionSaga(action: CreateCompetitionAction):
       type: actions.CREATE_COMPETITION_SUCCESS,
       response: response.data,
     });
+    yield put({
+      type: actions.GET_ONGOING_COMPETITION,
+      payload: {
+        userId: ''
+      }
+    });
+    yield put({
+      type: actions.GET_UPCOMING_COMPETITION,
+      payload: {
+        userId: ''
+      }
+    });
   } catch (error) {
     yield put({
       type: actions.CREATE_COMPETITION_FAILURE,

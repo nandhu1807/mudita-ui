@@ -113,7 +113,7 @@ const PastCompetition: React.FC<PastCompetitionListProps> = ({ competitions, rol
           Past Competitions
         </Typography>
       </Box>
-      <Competitions competitions={competitions} type="past" onCompetitionSelect={handleOpen} />
+      <Competitions competitions={competitions} type="past" role={role} onCompetitionSelect={handleOpen} />
       {role === 'STUDENT' && selectedCompetition && (
         <Dialog open={true} onClose={handleClose} maxWidth="md" fullWidth>
           <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', textTransform: 'uppercase' }}>

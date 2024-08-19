@@ -9,6 +9,7 @@ interface Competition {
   startDate: string;
   endDate: string;
   date: string;
+  shortDescription: string;
   descriptionText: string;
   status: string;
   prize: any;

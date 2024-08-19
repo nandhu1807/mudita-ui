@@ -5,22 +5,19 @@ import '../styles/verticalTabs.css';
 
 const roleBasedTabs = {
   ADMIN: [
-    { label: 'Login Credentials', path: '/login-credentials', disabled: true },
+    { label: 'Login Credentials', path: '/login-credentials', disabled: false },
     { label: 'Competition Grading', path: '/competition', disabled: false },
     { label: 'Active Competitions', path: '/active-competition', disabled: false },
     { label: 'Upcoming Competitions', path: '/upcoming-competition', disabled: false },
     { label: 'Past Competitions', path: '/past-competition', disabled: false },
-    { label: 'Announcements', path: '/announcements', disabled: true },
-    { label: 'Repository', path: '/repository', disabled: true },
+    { label: 'Learning Repository', path: '/learning', disabled: false },
   ],
   STUDENT: [
-    { label: 'Marquee of What’s New', path: '/whats-new', disabled: true },
-    { label: 'Student Profile', path: '/student-profile', disabled: true },
-    { label: 'Discussion Forum', path: '/discussion', disabled: true },
+    { label: 'Student Profile', path: '/student-profile', disabled: false },
     { label: 'Active Competitions', path: '/active-competition', disabled: false },
     { label: 'Upcoming Competitions', path: '/upcoming-competition', disabled: false },
     { label: 'Past Competitions', path: '/past-competition', disabled: false },
-    { label: 'Learning Repository', path: '/learning', disabled: true },
+    { label: 'Learning Repository', path: '/learning', disabled: false },
   ],
 };
 
@@ -68,10 +65,10 @@ const VerticalTabs: React.FC = () => {
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <Box className={'sidebarHeader'}>
           <Typography variant="h6" className={'title'}>
-            Mudita
+            Mudita Academy
           </Typography>
           <Typography variant="subtitle1" className={'subtitle'}>
-            School of Music
+            Competition Portal
           </Typography>
         </Box>
         <Box

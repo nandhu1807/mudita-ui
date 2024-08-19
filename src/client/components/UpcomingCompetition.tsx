@@ -7,7 +7,7 @@ import CreateCompetition from './CreateCompetition';
 
 interface UpcomingCompetitionProps {
   competitions: Competition[];
-  role: string;
+  role: 'STUDENT' | 'ADMIN' | '';
 }
 
 const UpcomingCompetition: React.FC<UpcomingCompetitionProps> = ({ competitions, role }) => {
@@ -38,7 +38,7 @@ const UpcomingCompetition: React.FC<UpcomingCompetitionProps> = ({ competitions,
         )}
       </Box>
       <CreateCompetition open={isCreateCompetitionDialogOpen} onClose={handleCloseCreateCompetitionDialog} />
-      <Competitions competitions={competitions} type="upcoming" onCompetitionSelect={handleOpenCompetition} />
+      <Competitions competitions={competitions} type="upcoming" role={role} onCompetitionSelect={handleOpenCompetition} />
     </div>
   );
 };

@@ -16,10 +16,13 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel, IconButton,
+  InputLabel,
+  IconButton,
+  Typography,
 } from '@mui/material';
-import SaveIcon from '@mui/icons-material/Save';
 import { SelectChangeEvent } from '@mui/material/Select';
+import CloseIcon from '@mui/icons-material/Close';
+import SaveIcon from '@mui/icons-material/Save';
 import actionTypes from '../utils/actionTypes';
 
 interface Competition {
@@ -147,6 +150,15 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
       <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', mb: 2, textTransform: 'uppercase' }}>
         {competition.title}
       </DialogTitle>
+      <IconButton
+        edge="end"
+        color="inherit"
+        onClick={onClose}
+        aria-label="close"
+        sx={{ position: 'absolute', right: 24, top: 8 }}
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogContent>
         <TableContainer>
           <Table>
@@ -219,19 +231,27 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
                     </TableCell>
                   )}
                   {type !== 'past' && type !== 'active' && (
-                      <TableCell sx={tableCellValueStyle}>
-                        <IconButton
-                            color="primary"
-                            onClick={() => handleSaveForRow(student.competitionDetailsId)}
-                            aria-label="save"
-                        >
-                          <SaveIcon />
-                        </IconButton>
-                      </TableCell>
-
+                    <TableCell sx={tableCellValueStyle}>
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleSaveForRow(student.competitionDetailsId)}
+                        aria-label="save"
+                      >
+                        <SaveIcon />
+                      </IconButton>
+                    </TableCell>
                   )}
                 </TableRow>
               ))}
+              {gradingData.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={4} >
+                      <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center', mt: 3, fontWeight: 'bold' }}>
+                        No records found !!!
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
@@ -247,9 +267,6 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
             backgroundColor: 'background.paper',
           }}
         >
-          <Button variant="outlined" color="secondary" onClick={onCancel} sx={{ mr: 2, width: '200px' }}>
-            Cancel
-          </Button>
           {type !== 'past' && type !== 'active' && (
             <Button variant="contained" color="error" onClick={handleEndCompetition} sx={{ width: '200px' }}>
               End Competition
