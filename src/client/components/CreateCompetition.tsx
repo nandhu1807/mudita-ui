@@ -21,7 +21,8 @@ import actionTypes from '../utils/actionTypes';
 
 interface CreateCompetitionProps {
   open: boolean;
-  onClose: () => void;
+  onClose: (isSave: boolean) => void;
+
 }
 
 const DatePickerField: React.FC<{
@@ -96,7 +97,7 @@ const CreateCompetition: React.FC<CreateCompetitionProps> = ({ open, onClose }) 
         },
       },
     });
-    onClose();
+    onClose(true);
   };
 
   const handleStartDateChange = (date: Date | null) => {
@@ -118,14 +119,14 @@ const CreateCompetition: React.FC<CreateCompetitionProps> = ({ open, onClose }) 
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={() => onClose(false)} maxWidth="md" fullWidth>
       <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', textTransform: 'uppercase' }}>
         Create New Competition
       </DialogTitle>
       <IconButton
         edge="end"
         color="inherit"
-        onClick={onClose}
+        onClick={() => onClose(false)}
         aria-label="close"
         sx={{ position: 'absolute', right: 24, top: 8 }}
       >
@@ -186,7 +187,6 @@ const CreateCompetition: React.FC<CreateCompetitionProps> = ({ open, onClose }) 
             onChange={(e) => setExplanationFile(e.target.value)}
             sx={{ mb: 2 }}
             InputLabelProps={{ sx: { fontSize: '1rem' } }}
-            required
           />
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>

@@ -9,6 +9,7 @@ interface AuthDetails {
   token: string;
   role: string;
   studentId?: string;
+  teacherId?: string;
   userName: string;
 }
 
@@ -34,6 +35,12 @@ const LoginContainer: React.FC = () => {
 
       if (authDetails.role === 'STUDENT' && authDetails.studentId) {
         localStorage.setItem('studentId', authDetails.studentId);
+        localStorage.setItem('userId', authDetails.studentId);
+      }
+
+      if (authDetails.role === 'TEACHER' && authDetails.teacherId) {
+        localStorage.setItem('teacherId', authDetails.teacherId);
+        localStorage.setItem('userId', authDetails.teacherId);
       }
 
       navigate('/active-competition');

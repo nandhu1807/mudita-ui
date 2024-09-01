@@ -19,6 +19,7 @@ import { RootState } from '../utils/shared/store';
 import moment from 'moment';
 import actionTypes from '../utils/actionTypes';
 import thumbnail from '../images/thumbnail-image.png';
+import Snackbar from './Snackbar';
 
 interface CompetitionDetails {
   competitionId?: number;
@@ -44,6 +45,15 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
   const { studentCompetitionDetails } = useSelector((state: RootState) => state.studentCompetitionDetails);
   const [link, setLink] = useState('');
   const [comments, setComments] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: actionTypes.CLEAR_STUDENT_COMPETITION_DETAILS,
+      });
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (type === 'active' && competition?.isUserEnrolled) {
@@ -85,9 +95,16 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
           },
         },
       });
+      setLink('');
+      setComments('');
       resetForm();
       onClose();
+      setSnackbarOpen(true);
     }
+  };
+
+  const isValid = () => {
+    return link && comments;
   };
 
   const resetForm = () => {
@@ -210,12 +227,14 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
             variant="contained"
             color="primary"
             onClick={handleSubmit}
+            disabled={!isValid()}
             sx={{ width: '200px' }}
           >
             Submit
           </Button>
         </Box>
       </DialogActions>
+      <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)} message={'Entry Submitted Successfully'} />
     </Dialog>
   );
 };

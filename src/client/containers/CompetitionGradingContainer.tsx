@@ -41,16 +41,27 @@ const CompetitionGradingContainer: React.FC = () => {
   );
 
   useEffect(() => {
-    dispatch({ type: actionTypes.GET_CLOSED_COMPETITION });
+    const role = localStorage.getItem('role');
+    const teacherId = localStorage.getItem('teacherId');
+    dispatch({ type: actionTypes.GET_CLOSED_COMPETITION, payload: { role, teacherId } });
   }, [dispatch]);
 
   const handleCompetitionClick = (competition: Competition) => {
     setSelectedCompetition(competition);
     setOpenDialog(true);
-    dispatch({
-      type: actionTypes.GET_STUDENT_COMPETITION_MASTER_DETAILS,
-      payload: { competitionId: competition.competitionId },
-    });
+    const role = localStorage.getItem('role');
+    const teacherId = localStorage.getItem('teacherId');
+    if (role === 'TEACHER') {
+      dispatch({
+        type: actionTypes.GET_STUDENT_COMPETITION_MASTER_DETAILS,
+        payload: { competitionId: competition.competitionId, teacherId: teacherId, type: role },
+      });
+    } else {
+      dispatch({
+        type: actionTypes.GET_STUDENT_COMPETITION_MASTER_DETAILS,
+        payload: { competitionId: competition.competitionId },
+      });
+    }
   };
 
   const handleDialogClose = () => {

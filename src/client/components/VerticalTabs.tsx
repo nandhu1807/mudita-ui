@@ -5,30 +5,35 @@ import '../styles/verticalTabs.css';
 
 const roleBasedTabs = {
   ADMIN: [
-    { label: 'Login Credentials', path: '/login-credentials', disabled: false },
+    { label: 'Profile Creation', path: '/profile', disabled: false },
     { label: 'Competition Grading', path: '/competition', disabled: false },
     { label: 'Active Competitions', path: '/active-competition', disabled: false },
     { label: 'Upcoming Competitions', path: '/upcoming-competition', disabled: false },
     { label: 'Past Competitions', path: '/past-competition', disabled: false },
-    { label: 'Learning Repository', path: '/learning', disabled: false },
   ],
   STUDENT: [
-    { label: 'Student Profile', path: '/student-profile', disabled: false },
+    { label: 'User Profile', path: '/user-profile', disabled: false },
     { label: 'Active Competitions', path: '/active-competition', disabled: false },
     { label: 'Upcoming Competitions', path: '/upcoming-competition', disabled: false },
     { label: 'Past Competitions', path: '/past-competition', disabled: false },
-    { label: 'Learning Repository', path: '/learning', disabled: false },
+  ],
+  TEACHER: [
+    { label: 'User Profile', path: '/user-profile', disabled: false },
+    { label: 'Competition Grading', path: '/competition', disabled: false },
+    { label: 'Active Competitions', path: '/active-competition', disabled: false },
+    { label: 'Upcoming Competitions', path: '/upcoming-competition', disabled: false },
+    { label: 'Past Competitions', path: '/past-competition', disabled: false },
   ],
 };
 
 const VerticalTabs: React.FC = () => {
   const location = useLocation();
-  const [role, setRole] = useState<'ADMIN' | 'STUDENT'>('STUDENT');
+  const [role, setRole] = useState<'ADMIN' | 'STUDENT' | 'TEACHER'>('STUDENT');
   const [userName, setUserName] = useState<string>('');
   const [selectedTab, setSelectedTab] = useState<number>(0);
 
   useEffect(() => {
-    const storedRole = localStorage.getItem('role') as 'ADMIN' | 'STUDENT' | null;
+    const storedRole = localStorage.getItem('role') as 'ADMIN' | 'STUDENT' | 'TEACHER' | null;
     setRole(storedRole ?? 'STUDENT');
   }, []);
 

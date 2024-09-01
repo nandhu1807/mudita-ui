@@ -7,17 +7,38 @@ import thumbnail from '../images/thumbnail-image.png';
 interface CompetitionsProps {
   competitions: Competition[];
   type: 'upcoming' | 'past' | 'active';
-  role: 'STUDENT' | 'ADMIN' | '';
+  role: 'STUDENT' | 'ADMIN' | 'TEACHER' | '';
   onCompetitionSelect: (competition: Competition) => void;
+  userProfile: any;
 }
+
+const checkIfValueExists = (str: string, value: string): boolean => {
+  const valuesArray = str.split(',').map((val) => val.trim());
+
+  return valuesArray.includes(value);
+};
 
 const CompetitionCard: React.FC<{
   competition: Competition;
   type: string;
-  role: 'STUDENT' | 'ADMIN' | '';
+  role: 'STUDENT' | 'ADMIN' | 'TEACHER' | '';
   onCompetitionSelect: (competition: Competition) => void;
-}> = ({ competition, type, role, onCompetitionSelect }) => {
+  userProfile: any;
+}> = ({ competition, type, role, onCompetitionSelect, userProfile }) => {
   const handleClick = () => onCompetitionSelect(competition);
+
+  const getStatusMessage = (): { text: string; color: 'textPrimary' | 'error' } => {
+    if (role === 'STUDENT' && userProfile !== null) {
+      if (checkIfValueExists(competition.courseList, userProfile.courseName)) {
+        return { text: 'Click to Submit Entry', color: 'textPrimary' };
+      } else {
+        return { text: 'Competition Not Applicable', color: 'error' };
+      }
+    }
+    return { text: 'View Submission Entries', color: 'textPrimary' };
+  };
+
+  const status = getStatusMessage();
 
   return (
     <Grid item xs={12} sm={6} md={4} key={`competition-${competition.competitionId}`}>
@@ -56,6 +77,9 @@ const CompetitionCard: React.FC<{
           </Typography>
           <Typography variant="body2" color="textSecondary" mt={2} mb={2}>
             {competition.shortDescription}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" mt={2} mb={2}>
+            {`Courses Applicable to ${competition.courseList}`}
           </Typography>
           {type !== 'past' && (
             <Box
@@ -99,13 +123,25 @@ const CompetitionCard: React.FC<{
               </Tooltip>
             )}
             {type === 'active' && (
-              <Tooltip title="Edit Competition" arrow>
-                <IconButton onClick={handleClick}>
-                  <Typography sx={{ color: '#1a0dab', textDecoration: 'underline' }}>
-                    {role === 'STUDENT' ? 'Click to Submit Entry' : 'View Submission Entries'}
+              <div>
+                {status.text === 'Competition Not Applicable' ? (
+                  <Typography variant="body1" color={status.color} sx={{ mt: 2 }}>
+                    {status.text}
                   </Typography>
-                </IconButton>
-              </Tooltip>
+                ) : (
+                  <Tooltip title={status.text} arrow>
+                    <IconButton onClick={handleClick}>
+                      <Typography
+                        variant="body1"
+                        color={status.color}
+                        sx={{ color: '#1a0dab', textDecoration: 'underline' }}
+                      >
+                        {status.text}
+                      </Typography>
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </div>
             )}
           </Box>
         </CardContent>
@@ -114,7 +150,7 @@ const CompetitionCard: React.FC<{
   );
 };
 
-const Competitions: React.FC<CompetitionsProps> = ({ competitions, type, role, onCompetitionSelect }) => {
+const Competitions: React.FC<CompetitionsProps> = ({ competitions, type, role, onCompetitionSelect, userProfile }) => {
   return (
     <Box sx={{ padding: 3, paddingTop: 0 }}>
       <Divider sx={{ mb: 4 }} />
@@ -126,6 +162,7 @@ const Competitions: React.FC<CompetitionsProps> = ({ competitions, type, role, o
             type={type}
             role={role}
             onCompetitionSelect={onCompetitionSelect}
+            userProfile={userProfile}
           />
         ))}
       </Grid>

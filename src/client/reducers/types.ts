@@ -55,3 +55,15 @@ export interface StudentCompetitionMasterDetailsState {
   isLoadingDetails: boolean;
   studentError: string;
 }
+
+export interface StudentMasterListState {
+  studentList: any;
+  isLoading: boolean;
+  error: string;
+}
+
+export interface UserProfileState {
+  userProfile: any;
+  isLoading: boolean;
+  error: string;
+}

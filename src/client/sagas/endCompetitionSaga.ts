@@ -38,6 +38,9 @@ export default function* endCompetitionSaga(action: EndCompetitionAction): SagaI
 
     yield put({
       type: actions.GET_CLOSED_COMPETITION,
+      payload: {
+        role: '',
+      },
     });
   } catch (error) {
     yield put({

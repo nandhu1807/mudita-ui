@@ -11,6 +11,10 @@ import getStudentCompetitionMasterDetailsSaga from './getStudentCompetitionMaste
 import getStudentCompetitionDetailsSaga from './getStudentCompetitionDetailsSaga';
 import createCompetitionSaga from './createCompetitionSaga';
 import endCompetitionSaga from './endCompetitionSaga';
+import getAllStudentsSaga from './getAllStudentsSaga';
+import createStudentSaga from './createStudentSaga';
+import getUserProfileSaga from './getUserProfileSaga';
+import updatePasswordSaga from './updatePasswordSaga';
 
 export default function* rootSaga() {
   yield takeLatest(actions.AUTH_LOGIN, authLoginSaga);
@@ -24,4 +28,8 @@ export default function* rootSaga() {
   yield takeLatest(actions.GET_STUDENT_COMPETITION_DETAILS, getStudentCompetitionDetailsSaga);
   yield takeLatest(actions.CREATE_COMPETITION, createCompetitionSaga);
   yield takeLatest(actions.END_COMPETITION, endCompetitionSaga);
+  yield takeLatest(actions.GET_ALL_STUDENTS, getAllStudentsSaga);
+  yield takeLatest(actions.ADD_STUDENT, createStudentSaga);
+  yield takeLatest(actions.GET_USER_PROFILE, getUserProfileSaga);
+  yield takeLatest(actions.UPDATE_PASSWORD, updatePasswordSaga);
 }

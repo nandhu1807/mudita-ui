@@ -20,6 +20,8 @@ const getStudentCompetitionDetailsReducer = (state = initialState, action: Actio
       return { ...state, isLoading: false, studentCompetitionDetails: action.response };
     case actionTypes.GET_STUDENT_COMPETITION_DETAILS_FAILURE:
       return { ...state, isLoading: false, error: action.response };
+    case actionTypes.CLEAR_STUDENT_COMPETITION_DETAILS:
+      return { ...state, isLoading: false, studentCompetitionDetails: null, error: '' };
     default:
       return state;
   }

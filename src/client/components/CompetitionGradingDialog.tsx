@@ -22,8 +22,8 @@ import {
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import CloseIcon from '@mui/icons-material/Close';
-import SaveIcon from '@mui/icons-material/Save';
 import actionTypes from '../utils/actionTypes';
+import Snackbar from "./Snackbar";
 
 interface Competition {
   competitionId: number;
@@ -41,6 +41,7 @@ interface Student {
   studentGrade: string;
   teacherComments: string;
   evaluatorComments: string;
+  evaluatedBy?: string;
   prizeName: string;
   prizeAssigned: string;
   rating?: string;
@@ -51,7 +52,7 @@ interface Prize {
 }
 
 interface GradingCompetitionDialogProps {
-  type: 'active' | 'past' | 'other'; // Adjust based on your application
+  type: 'active' | 'past' | 'other';
   open: boolean;
   onClose: () => void;
   competition: Competition;
@@ -80,6 +81,14 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
 }) => {
   const dispatch = useDispatch();
   const [gradingData, setGradingData] = useState<Student[]>(students);
+  const [role, setRole] = useState<'ADMIN' | 'STUDENT' | 'TEACHER' | ''>();
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
+
+  useEffect(() => {
+    const storedRole = localStorage.getItem('role') as 'ADMIN' | 'STUDENT' | 'TEACHER' | null;
+    setRole(storedRole ?? 'STUDENT');
+  }, [dispatch, role]);
 
   useEffect(() => {
     setGradingData(
@@ -118,19 +127,24 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
   const handleSaveForRow = (studentId: string) => {
     const studentData = gradingData.find((data) => data.competitionDetailsId === studentId);
     if (studentData) {
+      let teacherId = null;
+      if (role === 'TEACHER')
+        teacherId = localStorage.getItem('teacherId')
       dispatch({
         type: actionTypes.UPDATE_STUDENT_COMPETITION,
         payload: {
           updateStudentCompetitionRecord: {
             competitionId: competition.competitionId,
             competitionDetailsId: studentId,
-            teacherId: 10,
+            teacherId: teacherId,
             studentGrade: studentData.rating,
             teacherComments: studentData.evaluatorComments,
             prizeName: studentData.prizeAssigned,
           },
         },
       });
+      setSnackbarMessage('Student ratings saved successfully!');
+      setSnackbarOpen(true);
     }
   };
 
@@ -166,11 +180,14 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
               <TableRow>
                 <TableCell sx={tableCellStyle}>Batch Id</TableCell>
                 <TableCell sx={tableCellStyle}>Student Name</TableCell>
-                <TableCell sx={tableCellStyle}>File</TableCell>
-                <TableCell sx={tableCellStyle}>Comments</TableCell>
+                <TableCell sx={tableCellStyle} style={{ width: '10%' }}>
+                  File
+                </TableCell>
+                <TableCell sx={tableCellStyle}>Student Comments</TableCell>
                 {type !== 'active' && <TableCell sx={tableCellStyle}>Evaluator Comments</TableCell>}
                 {type !== 'active' && <TableCell sx={tableCellStyle}>Rating</TableCell>}
-                {type !== 'active' && <TableCell sx={tableCellStyle}>Prize Assigned</TableCell>}
+                {type !== 'active' && <TableCell sx={tableCellStyle}>Evaluated By</TableCell>}
+                {type !== 'active' && role === 'ADMIN' && <TableCell sx={tableCellStyle}>Prize Assigned</TableCell>}
                 {type !== 'past' && type !== 'active' && <TableCell sx={tableCellStyle}>Actions</TableCell>}
               </TableRow>
             </TableHead>
@@ -179,7 +196,7 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
                 <TableRow key={student.competitionDetailsId}>
                   <TableCell sx={tableCellValueStyle}>{student.batchId}</TableCell>
                   <TableCell sx={tableCellValueStyle}>{student.studentName}</TableCell>
-                  <TableCell sx={tableCellValueStyle}>
+                  <TableCell sx={tableCellValueStyle} style={{ width: '10%' }}>
                     {student.studentFile ? (
                       <a href={student.studentFile} target="_blank" rel="noopener noreferrer">
                         {student.studentFile}
@@ -212,6 +229,16 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
                     </TableCell>
                   )}
                   {type !== 'active' && (
+                      <TableCell sx={tableCellValueStyle}>
+                        <TextField
+                            fullWidth
+                            multiline
+                            value={student.evaluatedBy || ''}
+                            disabled
+                        />
+                      </TableCell>
+                  )}
+                  {type !== 'active' && role === 'ADMIN' && (
                     <TableCell>
                       <FormControl fullWidth>
                         <InputLabel>Prize Assigned</InputLabel>
@@ -232,25 +259,29 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
                   )}
                   {type !== 'past' && type !== 'active' && (
                     <TableCell sx={tableCellValueStyle}>
-                      <IconButton
+                      <Button
+                        variant="contained"
                         color="primary"
                         onClick={() => handleSaveForRow(student.competitionDetailsId)}
-                        aria-label="save"
                       >
-                        <SaveIcon />
-                      </IconButton>
+                        Save
+                      </Button>
                     </TableCell>
                   )}
                 </TableRow>
               ))}
               {gradingData.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={4} >
-                      <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center', mt: 3, fontWeight: 'bold' }}>
-                        No records found !!!
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
+                <TableRow>
+                  <TableCell colSpan={7}>
+                    <Typography
+                      variant="subtitle1"
+                      gutterBottom
+                      sx={{ textAlign: 'center', mt: 3, fontWeight: 'bold' }}
+                    >
+                      No records found !!!
+                    </Typography>
+                  </TableCell>
+                </TableRow>
               )}
             </TableBody>
           </Table>
@@ -267,13 +298,14 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
             backgroundColor: 'background.paper',
           }}
         >
-          {type !== 'past' && type !== 'active' && (
+          {type !== 'past' && type !== 'active' && role === 'ADMIN' && (
             <Button variant="contained" color="error" onClick={handleEndCompetition} sx={{ width: '200px' }}>
               End Competition
             </Button>
           )}
         </Box>
       </DialogContent>
+      <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)} message={snackbarMessage} />
     </Dialog>
   );
 };

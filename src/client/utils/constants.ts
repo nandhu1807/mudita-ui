@@ -6,6 +6,10 @@ export type ApiEndpoints = {
   getStudentCompetitionDetailsByStudentId: string;
   createCompetition: string;
   endCompetition: string;
+  getAllStudents: string;
+  createStudent: string;
+  getUserProfile: string;
+  updatePassword: string;
 };
 
 const apiConstants: ApiEndpoints = {
@@ -16,6 +20,10 @@ const apiConstants: ApiEndpoints = {
   getStudentCompetitionDetailsByStudentId: '/api/v1/competition/:competitionId/student/:studentId',
   createCompetition: '/api/v1/competition',
   endCompetition: '/api/v1/competition/:competitionId',
+  getAllStudents: '/api/v1/users',
+  createStudent: '/api/v1/users/create',
+  getUserProfile: '/api/v1/users/:userId/:type',
+  updatePassword: '/api/v1/users/reset/password',
 };
 
 export default apiConstants;

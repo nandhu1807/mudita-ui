@@ -8,6 +8,14 @@ interface ClosedCompetitionResponse {
   data: any;
 }
 
+interface GetClosedCompetitionAction {
+  type: typeof actions.GET_CLOSED_COMPETITION;
+  payload: {
+    status: string;
+    role: string;
+  };
+}
+
 interface GetClosedCompetitionSuccessAction {
   type: typeof actions.GET_CLOSED_COMPETITION_SUCCESS;
   response: ClosedCompetitionResponse['data'];
@@ -18,10 +26,10 @@ interface GetClosedCompetitionFailureAction {
   error: string;
 }
 
-export default function* getClosedCompetitionSaga(): SagaIterator {
+export default function* getClosedCompetitionSaga(action: GetClosedCompetitionAction): SagaIterator {
   try {
     const api = constants.getUpcomingCompetition;
-    const response: ClosedCompetitionResponse = yield call(callFetchApi, api, { status: 'CLOSED' }, 'GET');
+    const response: ClosedCompetitionResponse = yield call(callFetchApi, api, { status: 'CLOSED', type: action.payload.role }, 'GET');
 
     yield put<GetClosedCompetitionSuccessAction>({
       type: actions.GET_CLOSED_COMPETITION_SUCCESS,

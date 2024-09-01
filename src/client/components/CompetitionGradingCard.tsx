@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Grid, Card, CardContent, CardMedia, Typography, Tooltip, Box } from '@mui/material';
 import moment from 'moment';
 import thumbnail from '../images/thumbnail-image.png';
 
@@ -48,7 +48,7 @@ const CompetitionGradingCard: React.FC<GradingCompetitionCardProps> = ({ competi
               sx={{ objectFit: 'cover' }}
             />
             <CardContent>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant="h5" gutterBottom sx={{ textAlign: 'center', fontWeight: 'bold' }}>
                 {competition.title}
               </Typography>
               <Typography
@@ -61,8 +61,25 @@ const CompetitionGradingCard: React.FC<GradingCompetitionCardProps> = ({ competi
                 <span>End Date: {moment(competition.endDate).format('MM/DD/YYYY')}</span>
               </Typography>
               <Typography variant="body2" color="textSecondary" mt={2} mb={2}>
-                {competition.descriptionText}
+                {competition.shortDescription}
               </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  height: '100%',
+                  mt: 1,
+                }}
+              >
+                <Tooltip title="View Submission Entries" arrow>
+                  <Typography sx={{ color: '#1a0dab', textDecoration: 'underline' }}>
+                    {'View Submission Entries'}
+                  </Typography>
+                </Tooltip>
+              </Box>
             </CardContent>
           </Card>
         </Grid>

@@ -45,10 +45,14 @@ export default function* updateStudentCompetitionDetailsSaga(
       response: response.data,
     });
 
+    const role = localStorage.getItem('role');
+    const teacherId = localStorage.getItem('teacherId');
     yield put({
       type: actions.GET_STUDENT_COMPETITION_MASTER_DETAILS,
       payload: {
         competitionId: action.payload.updateStudentCompetitionRecord.competitionId,
+        teacherId: teacherId,
+        type: role,
       },
     });
   } catch (error) {

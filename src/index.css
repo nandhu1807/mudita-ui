@@ -1,8 +1,8 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
-}
+/** {*/
+/*  margin: 0;*/
+/*  padding: 0;*/
+/*  box-sizing: border-box; !* Ensures padding and border are included in the element's total width and height *!*/
+/*}*/
 
 html, body {
   height: 100%; /* Ensure full height */

@@ -22,7 +22,7 @@ const onProxyReq = (proxyReq, req, res) => {
 };
 
 const muditaAPISettings = {
-  target: process.env.MUDITA_API, // Ensure this is a valid URL
+  target: process.env.MUDITA_API,
   changeOrigin: true,
   secure: false,
   pathRewrite: (path, req) => path,

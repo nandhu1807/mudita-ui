@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -19,10 +20,11 @@ import {
 import CompetitionGradingDialog from './CompetitionGradingDialog';
 import Competitions from './Competitions';
 import actionTypes from '../utils/actionTypes';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface PastCompetitionListProps {
   competitions: Competition[];
-  role: 'ADMIN' | 'STUDENT' | '';
+  role: 'ADMIN' | 'STUDENT' | 'TEACHER' | '';
 }
 
 interface StudentCompetitionMasterDetailsState {
@@ -60,7 +62,7 @@ const PastCompetition: React.FC<PastCompetitionListProps> = ({ competitions, rol
   );
 
   useEffect(() => {
-    if (role === 'ADMIN' && selectedCompetition) {
+    if ((role === 'ADMIN' || role === 'TEACHER') && selectedCompetition) {
       dispatch({
         type: actionTypes.GET_STUDENT_COMPETITION_MASTER_DETAILS,
         payload: {
@@ -73,8 +75,17 @@ const PastCompetition: React.FC<PastCompetitionListProps> = ({ competitions, rol
   const handleOpen = (competition: Competition) => setSelectedCompetition(competition);
   const handleClose = () => setSelectedCompetition(null);
 
-  const renderResultsTable = () => (
+  const renderResultsTable = (handleClose: any) => (
     <TableContainer component={Paper}>
+      <IconButton
+        edge="end"
+        color="inherit"
+        onClick={handleClose}
+        aria-label="close"
+        sx={{ position: 'absolute', right: 24, top: 8 }}
+      >
+        <CloseIcon />
+      </IconButton>
       <Table>
         <TableHead>
           <TableRow>
@@ -113,16 +124,16 @@ const PastCompetition: React.FC<PastCompetitionListProps> = ({ competitions, rol
           Past Competitions
         </Typography>
       </Box>
-      <Competitions competitions={competitions} type="past" role={role} onCompetitionSelect={handleOpen} />
+      <Competitions competitions={competitions} type="past" role={role} onCompetitionSelect={handleOpen} userProfile={null} />
       {role === 'STUDENT' && selectedCompetition && (
         <Dialog open={true} onClose={handleClose} maxWidth="md" fullWidth>
           <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', textTransform: 'uppercase' }}>
             {selectedCompetition.title} - Results
           </DialogTitle>
-          <DialogContent>{renderResultsTable()}</DialogContent>
+          <DialogContent>{renderResultsTable(handleClose)}</DialogContent>
         </Dialog>
       )}
-      {role === 'ADMIN' && selectedCompetition && (
+      {(role === 'ADMIN' || role === 'TEACHER') && selectedCompetition && (
         <CompetitionGradingDialog
           type="past"
           open={true}

@@ -9,10 +9,12 @@ import CreateCompetition from './CreateCompetition';
 import { Box, Button, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { Competition } from '../../types';
+import Snackbar from './Snackbar';
 
 interface OngoingCompetitionListProps {
   competitions: Competition[];
-  role: 'ADMIN' | 'STUDENT' | '';
+  role: 'ADMIN' | 'STUDENT' | 'TEACHER' | '';
+  userProfile: any;
 }
 
 interface StudentCompetitionMasterDetailsState {
@@ -32,13 +34,17 @@ const prizeList: Prize[] = [
   { name: 'Special Mention' },
 ];
 
-const OngoingCompetition: React.FC<OngoingCompetitionListProps> = ({ competitions, role }) => {
+const OngoingCompetition: React.FC<OngoingCompetitionListProps> = ({ competitions, role, userProfile }) => {
   const dispatch = useDispatch();
   const [openCreateCompetitionDialog, setOpenCreateCompetitionDialog] = useState<boolean>(false);
   const [selectedCompetition, setSelectedCompetition] = useState<Competition | null>(null);
 
-  const { studentCompetitionMasterDetails }: StudentCompetitionMasterDetailsState =
-    useSelector((state: RootState) => state.studentCompetitionMasterDetails);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
+
+  const { studentCompetitionMasterDetails }: StudentCompetitionMasterDetailsState = useSelector(
+    (state: RootState) => state.studentCompetitionMasterDetails,
+  );
 
   useEffect(() => {
     if (role === 'ADMIN' && selectedCompetition) {
@@ -46,6 +52,16 @@ const OngoingCompetition: React.FC<OngoingCompetitionListProps> = ({ competition
         type: actionTypes.GET_STUDENT_COMPETITION_MASTER_DETAILS,
         payload: {
           competitionId: selectedCompetition.competitionId,
+        },
+      });
+    }
+    if (role === 'TEACHER' && selectedCompetition) {
+      dispatch({
+        type: actionTypes.GET_STUDENT_COMPETITION_MASTER_DETAILS,
+        payload: {
+          competitionId: selectedCompetition.competitionId,
+          teacherId: localStorage.getItem('teacherId'),
+          type: 'TEACHER',
         },
       });
     }
@@ -61,7 +77,13 @@ const OngoingCompetition: React.FC<OngoingCompetitionListProps> = ({ competition
 
   const handleCreateCompetitionOpenDialog = () => setOpenCreateCompetitionDialog(true);
 
-  const handleCreateCompetitionCloseDialog = () => setOpenCreateCompetitionDialog(false);
+  const handleCreateCompetitionCloseDialog = (isSave: boolean) => {
+    setOpenCreateCompetitionDialog(false);
+    if (isSave) {
+      setSnackbarOpen(true);
+      setSnackbarMessage('Competition created successfully');
+    }
+  };
 
   return (
     <div>
@@ -75,14 +97,14 @@ const OngoingCompetition: React.FC<OngoingCompetitionListProps> = ({ competition
             color="primary"
             onClick={handleCreateCompetitionOpenDialog}
             startIcon={<AddIcon />}
-            sx={{ whiteSpace: 'nowrap', width: '300px' }}
+            sx={{ whiteSpace: 'nowrap', width: '250px' }}
           >
             Create Competition
           </Button>
         )}
       </Box>
       <CreateCompetition open={openCreateCompetitionDialog} onClose={handleCreateCompetitionCloseDialog} />
-      <Competitions competitions={competitions} role={role} type="active" onCompetitionSelect={handleOpen} />
+      <Competitions competitions={competitions} role={role} type="active" onCompetitionSelect={handleOpen} userProfile={userProfile} />
       {role === 'STUDENT' && selectedCompetition && (
         <StudentSubmitDialog
           type="active"
@@ -91,7 +113,7 @@ const OngoingCompetition: React.FC<OngoingCompetitionListProps> = ({ competition
           competition={selectedCompetition}
         />
       )}
-      {role === 'ADMIN' && selectedCompetition && (
+      {(role === 'ADMIN' || role === 'TEACHER') && selectedCompetition && (
         <CompetitionGradingDialog
           type="active"
           open={Boolean(selectedCompetition)}
@@ -102,6 +124,7 @@ const OngoingCompetition: React.FC<OngoingCompetitionListProps> = ({ competition
           onCancel={handleClose}
         />
       )}
+      <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)} message={snackbarMessage} />
     </div>
   );
 };

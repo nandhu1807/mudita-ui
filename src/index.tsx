@@ -5,6 +5,9 @@ import store, { sagaMiddleware } from './client/utils/shared/store';
 import saga from './client/sagas/saga';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 import './index.css';
 
 const rootElement = document.getElementById('root') as HTMLElement;

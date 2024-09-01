@@ -14,23 +14,42 @@ interface OngoingCompetitionState {
 
 const OngoingCompetitionContainer: React.FC = () => {
   const dispatch = useDispatch();
-  const [role, setRole] = useState<'ADMIN' | 'STUDENT' | ''>('');
+  const [role, setRole] = useState<'ADMIN' | 'STUDENT' | 'TEACHER' | ''>('');
 
   const { ongoingCompetition, isLoading, error }: OngoingCompetitionState = useSelector(
     (state: RootState) => state.ongoingCompetition,
   );
+  const { userProfile }: any = useSelector((state: RootState) => state.getUserProfile);
 
   useEffect(() => {
-    const storedRole = localStorage.getItem('role') as 'ADMIN' | 'STUDENT' | '';
+    const storedRole = localStorage.getItem('role') as 'ADMIN' | 'STUDENT' | 'TEACHER' | '';
     setRole(storedRole);
   }, []);
 
   useEffect(() => {
-    const userId = localStorage.getItem('studentId') || '';
-    dispatch({
-      type: actionTypes.GET_ONGOING_COMPETITION,
-      payload: { userId },
-    });
+    if (role === 'TEACHER') {
+      const teacherId = localStorage.getItem('teacherId');
+      dispatch({
+        type: actionTypes.GET_ONGOING_COMPETITION,
+        payload: { userId: teacherId },
+      });
+    } else if (role !== '') {
+      const studentId = localStorage.getItem('studentId') || '';
+      dispatch({
+        type: actionTypes.GET_ONGOING_COMPETITION,
+        payload: { userId: studentId },
+      });
+    }
+  }, [dispatch, role]);
+
+  useEffect(() => {
+      dispatch({
+        type: actionTypes.GET_USER_PROFILE,
+        payload: {
+          userId: localStorage.getItem('userId'),
+          type: localStorage.getItem('role'),
+        },
+      });
   }, [dispatch]);
 
   if (isLoading) {
@@ -41,7 +60,7 @@ const OngoingCompetitionContainer: React.FC = () => {
     return <div>Error: {error}</div>;
   }
 
-  return <OngoingCompetition competitions={ongoingCompetition} role={role} />;
+  return <OngoingCompetition competitions={ongoingCompetition} role={role} userProfile={userProfile} />;
 };
 
 export default OngoingCompetitionContainer;

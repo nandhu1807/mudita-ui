@@ -14,14 +14,14 @@ interface UpcomingCompetitionState {
 
 const UpcomingCompetitionContainer: React.FC = () => {
   const dispatch = useDispatch();
-  const [role, setRole] = useState<'ADMIN' | 'STUDENT' | ''>('');
+  const [role, setRole] = useState<'ADMIN' | 'STUDENT' | 'TEACHER' | ''>('');
 
   const { upcomingCompetition, isLoading, error }: UpcomingCompetitionState = useSelector(
     (state: RootState) => state.upcomingCompetition,
   );
 
   useEffect(() => {
-    const storedRole = localStorage.getItem('role') as 'ADMIN' | 'STUDENT' | '';
+    const storedRole = localStorage.getItem('role') as 'ADMIN' | 'STUDENT' | 'TEACHER' | '';
     setRole(storedRole);
   }, []);
 

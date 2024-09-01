@@ -28,7 +28,6 @@ interface GetOngoingCompetitionFailureAction {
 export default function* getOngoingCompetitionSaga(action: GetOngoingCompetitionAction): SagaIterator {
   try {
     const api = constants.getUpcomingCompetition;
-    console.log(action.payload);
     const response: OngoingCompetitionResponse = yield call(
       callFetchApi,
       api,

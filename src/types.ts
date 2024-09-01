@@ -17,6 +17,7 @@ export interface Competition {
   image?: string;
   status: string;
   results?: CompetitionResult[];
+  courseList?: any;
   prize: any[];
 }
 

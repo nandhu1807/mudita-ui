@@ -12,6 +12,8 @@ interface GetStudentCompetitionMasterDetailsAction {
   type: typeof actions.GET_STUDENT_COMPETITION_MASTER_DETAILS;
   payload: {
     competitionId: string;
+    teacherId: string;
+    type: string;
   };
 }
 
@@ -32,7 +34,7 @@ export default function* getStudentCompetitionMasterDetailsSaga(
     let api = constants.getStudentCompetitionMasterDetails;
     api = api.replace(':competitionId', action.payload.competitionId);
 
-    const response: StudentCompetitionMasterDetailsResponse = yield call(callFetchApi, api, {}, 'GET');
+    const response: StudentCompetitionMasterDetailsResponse = yield call(callFetchApi, api, { teacherId: action.payload.teacherId, type: action.payload.type }, 'GET');
 
     yield put<GetStudentCompetitionMasterDetailsSuccessAction>({
       type: actions.GET_STUDENT_COMPETITION_MASTER_DETAILS_SUCCESS,

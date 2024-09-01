@@ -6,6 +6,8 @@ import getUpcomingCompetitionReducer from './getUpcomingCompetitionReducer';
 import getClosedCompetitionReducer from './getClosedCompetitionReducer';
 import getStudentCompetitionMasterDetailsReducer from './getStudentCompetitionMasterDetailsReducer';
 import getStudentCompetitionDetailsReducer from './getStudentCompetitionDetailsReducer';
+import getAllStudentReducer from './getAllStudentReducer';
+import getUserProfileReducer from './getUserProfileReducer';
 
 const rootReducer = combineReducers({
   authLogin: authLoginReducer,
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
   closedCompetition: getClosedCompetitionReducer,
   studentCompetitionMasterDetails: getStudentCompetitionMasterDetailsReducer,
   studentCompetitionDetails: getStudentCompetitionDetailsReducer,
+  getAllStudents: getAllStudentReducer,
+  getUserProfile: getUserProfileReducer,
 });
 
 export default rootReducer;
