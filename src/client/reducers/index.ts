@@ -8,6 +8,7 @@ import getStudentCompetitionMasterDetailsReducer from './getStudentCompetitionMa
 import getStudentCompetitionDetailsReducer from './getStudentCompetitionDetailsReducer';
 import getAllStudentReducer from './getAllStudentReducer';
 import getUserProfileReducer from './getUserProfileReducer';
+import updatePasswordReducer from './updatePasswordReducer';
 
 const rootReducer = combineReducers({
   authLogin: authLoginReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   studentCompetitionDetails: getStudentCompetitionDetailsReducer,
   getAllStudents: getAllStudentReducer,
   getUserProfile: getUserProfileReducer,
+  updatePassword: updatePasswordReducer,
 });
 
 export default rootReducer;

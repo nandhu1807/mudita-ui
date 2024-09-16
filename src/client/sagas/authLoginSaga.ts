@@ -5,7 +5,9 @@ import actions from '../utils/actionTypes';
 import constants from '../utils/constants';
 
 interface AuthLoginResponse {
+  status?: any;
   data: any;
+  response?: any;
 }
 
 interface LoginDetails {
@@ -29,10 +31,17 @@ export default function* authLoginSaga(action: AuthLoginAction): SagaIterator {
     const apiEndpoint = constants.authLogin;
 
     const response: AuthLoginResponse = yield postLogin(apiEndpoint, action.payload.loginDetails);
-    yield put({
-      type: actions.AUTH_LOGIN_SUCCESS,
-      response: response.data,
-    });
+    if (response.status === 200) {
+      yield put({
+        type: actions.AUTH_LOGIN_SUCCESS,
+        response: response.data,
+      });
+    } else {
+      yield put({
+        type: actions.AUTH_LOGIN_FAILURE,
+        error: response.response.data.message,
+      });
+    }
   } catch (error) {
     yield put({
       type: actions.AUTH_LOGIN_FAILURE,

@@ -159,6 +159,13 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
     onClose();
   };
 
+  const isSaveDisabled = (student: Student) => {
+    if (role === 'TEACHER')
+      return !(student.evaluatorComments && student.rating);
+    if (role === 'ADMIN')
+      return !(student.evaluatorComments && student.rating && student.prizeAssigned);
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth>
       <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', mb: 2, textTransform: 'uppercase' }}>
@@ -178,7 +185,7 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={tableCellStyle}>Batch Id</TableCell>
+                <TableCell sx={tableCellStyle}>Batch Name</TableCell>
                 <TableCell sx={tableCellStyle}>Student Name</TableCell>
                 <TableCell sx={tableCellStyle} style={{ width: '10%' }}>
                   File
@@ -186,7 +193,7 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
                 <TableCell sx={tableCellStyle}>Student Comments</TableCell>
                 {type !== 'active' && <TableCell sx={tableCellStyle}>Evaluator Comments</TableCell>}
                 {type !== 'active' && <TableCell sx={tableCellStyle}>Rating</TableCell>}
-                {type !== 'active' && <TableCell sx={tableCellStyle}>Evaluated By</TableCell>}
+                {type !== 'active' && role === 'ADMIN' && <TableCell sx={tableCellStyle}>Evaluated By</TableCell>}
                 {type !== 'active' && role === 'ADMIN' && <TableCell sx={tableCellStyle}>Prize Assigned</TableCell>}
                 {type !== 'past' && type !== 'active' && <TableCell sx={tableCellStyle}>Actions</TableCell>}
               </TableRow>
@@ -228,7 +235,7 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
                       />
                     </TableCell>
                   )}
-                  {type !== 'active' && (
+                  {type !== 'active' && role === 'ADMIN' && (
                       <TableCell sx={tableCellValueStyle}>
                         <TextField
                             fullWidth
@@ -262,6 +269,7 @@ const CompetitionGradingDialog: React.FC<GradingCompetitionDialogProps> = ({
                       <Button
                         variant="contained"
                         color="primary"
+                        disabled={isSaveDisabled(student)}
                         onClick={() => handleSaveForRow(student.competitionDetailsId)}
                       >
                         Save

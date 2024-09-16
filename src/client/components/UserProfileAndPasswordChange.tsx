@@ -27,6 +27,7 @@ interface ProfileAndPasswordChangeViewProps {
     oldPassword?: string;
     newPassword?: string;
   };
+  apiError: string;
   handleOldPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleNewPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePasswordChange: () => void;
@@ -78,10 +79,15 @@ const UserProfileAndPasswordChange: React.FC<ProfileAndPasswordChangeViewProps> 
   oldPassword,
   newPassword,
   errors,
+  apiError,
   handleOldPasswordChange,
   handleNewPasswordChange,
   handlePasswordChange,
 }) => {
+  let profile = localStorage.getItem('role');
+  if (profile === 'STUDENT') profile = 'Student';
+  else if (profile === 'TEACHER') profile = 'Teacher';
+
   return (
     <Box sx={{ padding: 3, paddingBottom: 0 }}>
       <Grid container spacing={2}>
@@ -90,13 +96,13 @@ const UserProfileAndPasswordChange: React.FC<ProfileAndPasswordChangeViewProps> 
             <CardContent>
               <CardTitle variant="h5">Profile Information</CardTitle>
               <Typography variant="body1">
-                <strong>Batch ID:</strong> {data.batchId}
+                <strong>Batch Name:</strong> {data.batchId}
               </Typography>
               <Typography variant="body1">
-                <strong>Student Name:</strong> {data.studentName}
+                <strong>{profile} Name:</strong> {data.studentName}
               </Typography>
               <Typography variant="body1">
-                <strong>Student Email:</strong> {data.studentEmail}
+                <strong>{profile} Email:</strong> {data.studentEmail}
               </Typography>
             </CardContent>
           </ProfileCard>
@@ -142,6 +148,13 @@ const UserProfileAndPasswordChange: React.FC<ProfileAndPasswordChangeViewProps> 
           />
           <FormHelperText>{errors.newPassword}</FormHelperText>
         </StyledFormControl>
+        {apiError && (
+          <Grid item xs={12}>
+            <Typography color="error" align="center">
+              {apiError}
+            </Typography>
+          </Grid>
+        )}
         <StyledButton variant="contained" color="primary" onClick={handlePasswordChange}>
           Change Password
         </StyledButton>

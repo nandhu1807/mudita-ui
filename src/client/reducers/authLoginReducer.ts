@@ -14,7 +14,7 @@ const authLoginReducer = (state = initialState, action: AuthLoginReducerAction):
     case actionTypes.AUTH_LOGIN_SUCCESS:
       return { ...state, isLoading: false, authDetails: action.response as AuthDetails };
     case actionTypes.AUTH_LOGIN_FAILURE:
-      return { ...state, isLoading: false, error: action.response as string };
+      return { ...state, isLoading: false, error: action.error as string };
     default:
       return state;
   }

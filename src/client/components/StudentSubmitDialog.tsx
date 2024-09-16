@@ -40,10 +40,16 @@ interface SubmitDialogProps {
   competition: CompetitionDetails | null;
 }
 
+const urlRegex = /^https:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9\-\.]*)*$/;
+
 const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose, competition }) => {
   const dispatch = useDispatch();
+
   const { studentCompetitionDetails } = useSelector((state: RootState) => state.studentCompetitionDetails);
+
   const [link, setLink] = useState('');
+  const [linkError, setLinkError] = useState<string | null>(null);
+
   const [comments, setComments] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
 
@@ -76,6 +82,12 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
 
   const handleLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLink(event.target.value);
+
+    if (urlRegex.test(event.target.value)) {
+      setLinkError(null);
+    } else {
+      setLinkError('Invalid URL format. Please enter a valid HTTPS link.');
+    }
   };
 
   const handleCommentsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,6 +116,8 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
   };
 
   const isValid = () => {
+    if (linkError)
+      return false;
     return link && comments;
   };
 
@@ -197,7 +211,9 @@ const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose,
           value={link}
           onChange={handleLinkChange}
           sx={{ mb: 2 }}
-          autoComplete={'off'}
+          autoComplete="off"
+          error={!!linkError}
+          helperText={linkError}
         />
         <TextField
           fullWidth

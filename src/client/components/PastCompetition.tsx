@@ -89,7 +89,7 @@ const PastCompetition: React.FC<PastCompetitionListProps> = ({ competitions, rol
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={tableCellStyle}>Batch Id</TableCell>
+            <TableCell sx={tableCellStyle}>Batch Name</TableCell>
             <TableCell sx={tableCellStyle}>Student Name</TableCell>
             <TableCell sx={tableCellStyle}>Position</TableCell>
             <TableCell sx={tableCellStyle}>Comments</TableCell>

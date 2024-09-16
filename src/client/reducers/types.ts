@@ -15,6 +15,7 @@ export interface AuthLoginState {
 
 interface AuthLoginAction {
   type: string;
+  error?: string;
   response?: AuthDetails | string;
 }
 

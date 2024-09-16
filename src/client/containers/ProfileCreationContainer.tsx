@@ -89,10 +89,10 @@ const ProfileCreationContainer: React.FC = () => {
             tableStyle={{ minWidth: '50rem' }}
             emptyMessage="No students found"
           >
-            <Column field="batchId" header="Batch Id" sortable />
-            <Column field="userId" header="Username" sortable />
             <Column field="studentName" header="Student Name" sortable />
+            <Column field="userName" header="Username" sortable />
             <Column field="studentEmail" header="Email" sortable />
+            <Column field="batchId" header="Batch Name" sortable />
             <Column field="courseName" header="Course Name" sortable />
           </DataTable>
         </div>

@@ -210,7 +210,7 @@ const CreateStudent: React.FC<CreateStudentDialogProps> = ({ open, onClose, onSa
           <FormHelperText>{errors.course}</FormHelperText>
         </FormControl>
         <TextField
-          label="Batch Id"
+          label="Batch Name"
           name="batchId"
           fullWidth
           variant="outlined"

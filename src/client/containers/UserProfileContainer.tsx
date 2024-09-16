@@ -21,6 +21,7 @@ const UserProfileContainer: React.FC = () => {
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
 
   const { userProfile }: UserProfilesState = useSelector((state: RootState) => state.getUserProfile);
+  const { updatePassword, error }: any = useSelector((state: RootState) => state.updatePassword);
 
   useEffect(() => {
     dispatch({
@@ -31,6 +32,15 @@ const UserProfileContainer: React.FC = () => {
       },
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    if (updatePassword !== null && updatePassword.message === 'Password updated successfully!') {
+      setNewPassword('');
+      setOldPassword('');
+      setSnackbarMessage('Password updated successfully !');
+      setSnackbarOpen(true);
+    }
+  }, [updatePassword, error]);
 
   const handleOldPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOldPassword(e.target.value);
@@ -60,10 +70,6 @@ const UserProfileContainer: React.FC = () => {
           },
         },
       });
-      setNewPassword('');
-      setOldPassword('');
-      setSnackbarMessage('Password updated successfully!');
-      setSnackbarOpen(true);
     }
   };
 
@@ -83,6 +89,7 @@ const UserProfileContainer: React.FC = () => {
           oldPassword={oldPassword}
           newPassword={newPassword}
           errors={errors}
+          apiError={error}
           handleOldPasswordChange={handleOldPasswordChange}
           handleNewPasswordChange={handleNewPasswordChange}
           handlePasswordChange={handlePasswordChange}

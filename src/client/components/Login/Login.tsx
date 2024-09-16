@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, Button, Typography, Link, Container, Grid, Paper } from '@mui/material';
+import { TextField, Button, Typography, Container, Grid, Paper } from '@mui/material';
 import '../../styles/login.css';
 
 interface LoginProps {
@@ -64,11 +64,6 @@ const Login: React.FC<LoginProps> = ({ onSubmit, onEmailChange, onPasswordChange
                   <Button type="submit" fullWidth variant="contained" color="primary">
                     Login
                   </Button>
-                </Grid>
-                <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Link href="/forgot-password" variant="body2">
-                    Forgot Password?
-                  </Link>
                 </Grid>
               </Grid>
             </form>

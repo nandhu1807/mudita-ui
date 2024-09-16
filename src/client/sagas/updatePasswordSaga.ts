@@ -5,7 +5,9 @@ import actions from '../utils/actionTypes';
 import constants from '../utils/constants';
 
 interface UpdatePasswordResponse {
+  status?: any;
   data: any;
+  response?: any;
 }
 
 interface UpdatePasswordPayload {
@@ -32,10 +34,17 @@ export default function* updatePasswordSaga(action: AddStudentAction): SagaItera
       action.payload.updatePassword,
     );
 
-    yield put({
-      type: actions.UPDATE_PASSWORD_SUCCESS,
-      response: response.data,
-    });
+    if (response.status === 202) {
+      yield put({
+        type: actions.UPDATE_PASSWORD_SUCCESS,
+        response: response.data,
+      });
+    } else {
+      yield put({
+        type: actions.UPDATE_PASSWORD_FAILURE,
+        response: response.response.data.message,
+      });
+    }
   } catch (error) {
     yield put({
       type: actions.UPDATE_PASSWORD_FAILURE,
