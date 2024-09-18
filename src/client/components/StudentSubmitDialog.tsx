@@ -40,7 +40,7 @@ interface SubmitDialogProps {
   competition: CompetitionDetails | null;
 }
 
-const urlRegex = /^https:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9\-\.]*)*$/;
+const urlRegex = /^(https:\/\/(drive\.google\.com|docs\.google\.com)\/.*|https:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9\-\.]*)*)$/;
 
 const StudentSubmitDialog: React.FC<SubmitDialogProps> = ({ type, open, onClose, competition }) => {
   const dispatch = useDispatch();
